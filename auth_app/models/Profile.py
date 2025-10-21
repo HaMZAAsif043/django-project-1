@@ -1,0 +1,17 @@
+from django.db import models
+from .User import User
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_img = models.TextField(null=True, blank=True)  
+    phone_number = models.CharField(max_length=11, unique=True)
+    dob = models.DateField()
+    username = models.CharField(max_length=20,null=False,default='default_username')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'user_profiles'  
+        ordering = ['-created_at']  
+        unique_together = ('user', 'phone_number') 
+        verbose_name = 'User Profile'
+        verbose_name_plural = 'User Profiles'
