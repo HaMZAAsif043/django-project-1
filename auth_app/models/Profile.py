@@ -2,7 +2,7 @@ from django.db import models
 from .User import User
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name="profile")
     profile_img = models.TextField(null=True, blank=True)  
     phone_number = models.CharField(max_length=11, unique=True)
     dob = models.DateField()
