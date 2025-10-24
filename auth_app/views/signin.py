@@ -3,8 +3,14 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from auth_app.models import User ,Profile
 from django.contrib.auth.hashers import make_password, check_password
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 
 @csrf_exempt
+@api_view(['POST'])
+@permission_classes([AllowAny])
 def signin(req):
     if req.method != 'POST':
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
@@ -24,7 +30,20 @@ def signin(req):
         if not check_password(password, user.password):
             return JsonResponse({'error': 'Invalid email or password'}, status=401)
 
-        return JsonResponse({'message': 'Login successful' ,"data" :str(user)}, status=200)
+        refresh = RefreshToken.for_user(user)
+
+        return JsonResponse({
+                    'message': 'Login successful',
+                    'user': {
+                        'id': user.id,
+                        'username': user.profile.username,
+                        'email': user.email,
+                    },
+                    'tokens': {
+                        'refresh': str(refresh),
+                        'access': str(refresh.access_token),
+                    }
+                }, status=200)
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)

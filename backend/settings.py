@@ -10,9 +10,19 @@ DEBUG = True
 AUTH_USER_MODEL = 'auth_app.User'
 
 ALLOWED_HOSTS = []
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',  # for web login sessions
+        'rest_framework.authentication.BasicAuthentication',    # for testing (Postman)
+        'rest_framework.authentication.TokenAuthentication',    # for API token login
+        # or for JWT:
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
 
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -21,9 +31,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'auth_app'
+    'auth_app',
+     'rest_framework',
+    'rest_framework.authtoken',
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -33,6 +44,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'backend.urls'
 

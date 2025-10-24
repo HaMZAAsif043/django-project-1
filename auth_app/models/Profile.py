@@ -8,6 +8,9 @@ class Profile(models.Model):
     dob = models.DateField()
     username = models.CharField(max_length=20,null=False,default='default_username')
     created_at = models.DateTimeField(auto_now_add=True)
+    isActive =models.BooleanField(default=False)
+    verification_code = models.CharField(max_length=6, default='')
+
 
     class Meta:
         db_table = 'user_profiles'  
@@ -15,3 +18,5 @@ class Profile(models.Model):
         unique_together = ('user', 'phone_number') 
         verbose_name = 'User Profile'
         verbose_name_plural = 'User Profiles'
+    def __str__(self):
+        return self.username
