@@ -34,11 +34,6 @@ def signin(req):
 
         return JsonResponse({
                     'message': 'Login successful',
-                    'user': {
-                        'id': user.id,
-                        'username': user.profile.username,
-                        'email': user.email,
-                    },
                     'tokens': {
                         'refresh': str(refresh),
                         'access': str(refresh.access_token),

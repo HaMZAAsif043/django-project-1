@@ -29,7 +29,6 @@ class Profile(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    # 🟡 Update logged-in user's profile
     def put(self, request):
         try:
             user = request.user

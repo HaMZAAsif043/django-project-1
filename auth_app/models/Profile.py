@@ -10,8 +10,9 @@ class Profile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     isActive =models.BooleanField(default=False)
     verification_code = models.CharField(max_length=6, default='')
-
-
+    two_factor_auth = models.BooleanField(default=False)
+    forget_password =models.BooleanField(default=False)
+    is_Bloked = models.BooleanField(default=False)
     class Meta:
         db_table = 'user_profiles'  
         ordering = ['-created_at']  
