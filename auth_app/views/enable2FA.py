@@ -18,7 +18,7 @@ def enable2FA(req):
 
     try:
         user = req.user
-        import pdb ; pdb.set_trace()
+        # import pdb ; pdb.set_trace()
         profile, created = Profile.objects.get_or_create(
             user=user,
         )

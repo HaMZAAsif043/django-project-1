@@ -10,7 +10,7 @@ from django.db import transaction
 from rest_framework_simplejwt.tokens import RefreshToken
 
 @csrf_exempt
-def verification(req):
+def verify_forget_password(req):
     if req.method != 'POST':
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
@@ -35,14 +35,11 @@ def verification(req):
                 if verification_code == code:
                     user.profile.isActive =True
                     user.profile.verification_code=''
+                    user.profile.forget_password = True
                     user.profile.save()
                     refresh = RefreshToken.for_user(user)
 
-                    return JsonResponse({'message': 'Account Created successful',
-                                         'tokens': {
-                                             'refresh': str(refresh),
-                                             'access': str(refresh.access_token),
-                                            }} ,status=201)
+                    return JsonResponse({'message': 'Verified Successful',} ,status=200)
 
 
             return JsonResponse({'error': 'User Not Found'}, status=404)

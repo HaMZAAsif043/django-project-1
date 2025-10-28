@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from auth_app.models import Profile
+from django.contrib.auth.hashers import make_password
 
 
 class Profile(APIView):
@@ -37,15 +38,21 @@ class Profile(APIView):
             username = request.data.get("username")
             phone_number = request.data.get("phone_number")
             profile_img = request.data.get("profile_img")
-
+            password = request.data.get("password")
             if username:
                 profile.username = username
             if phone_number:
                 profile.phone_number = phone_number
             if profile_img:
                 profile.profile_img = profile_img
+            if password:
+                user.password = make_password(password)
+                user.save()
+                return Response({'message': 'Password updated successfully'}, status=status.HTTP_200_OK)
+
 
             profile.save()
+            user.save()
             return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK)
 
         except Profile.DoesNotExist:
