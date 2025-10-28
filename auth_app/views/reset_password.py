@@ -7,8 +7,8 @@ from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db import transaction
-from auth_app.utils import send_verification_email
 from django.contrib.auth.password_validation import validate_password
+from ..utils import generate_verification_code ,send_email
 
 @csrf_exempt
 def reset_password(req):
@@ -27,6 +27,7 @@ def reset_password(req):
             return JsonResponse({'error': 'Invalid Password'}, status=400)
 
         user = User.objects.filter(email=email).first()
+        import pdb; pdb.set_trace();
         if user:
             if hasattr(user, 'profile'):
                 profile = user.profile
@@ -38,7 +39,8 @@ def reset_password(req):
                     user.password = make_password(password)
                     user.save()
                     return JsonResponse({'message': 'Password Reset Successful'}, status=200)
-                
+                return JsonResponse({'error': 'Not authenticated to perform this action'}, status=401)
+
 
 
             return JsonResponse({'error': 'User Not Found'}, status=404)

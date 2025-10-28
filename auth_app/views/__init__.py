@@ -6,3 +6,4 @@ from .enable2FA import enable2FA
 from .forgetPassword import forgetPassword
 from .verify_forgetPassword import verify_forget_password
 from .reset_password import reset_password
+from .resend_verification import resend_verification

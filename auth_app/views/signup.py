@@ -7,7 +7,8 @@ from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db import transaction
-
+from ..utils import generate_verification_code ,send_email
+from django.utils import timezone
 @csrf_exempt
 def signup(req):
     if req.method != 'POST':
@@ -29,23 +30,14 @@ def signup(req):
         if user:
             if hasattr(user, 'profile'):
                 profile = user.profile
-
-                verification_code =profile.verification_code
-                if not profile.verification_code:
-                    verification_code = ''.join(secrets.choice('0123456789') for _ in range(6))
-                    profile.verification_code = verification_code
-                    profile.save()
-
-                send_mail(
-                        subject="Email Verification Code",
-                        message=f"Your verification code is {verification_code}. It expires in 5 minutes.",
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        recipient_list=[email],
-                        fail_silently=False,
-                    )
-                return JsonResponse({'message': 'OTP has been resent to your email'}, status=200)
-
-            return JsonResponse({'error': 'Email is already registered'}, status=409)
+                code = profile.codes.filter(is_used=False).first()
+                if code.expires_at > timezone.now() and code.is_used ==False:
+                    send_email(user,code.code)
+                    return JsonResponse({'message': 'OTP has been resent to your email'}, status=200)
+                verification  = generate_verification_code(profile=profile ,purpose='ACCOUNT_VERIFY')
+                if verification:
+                    send_email(user,verification.code)
+                    return JsonResponse({'message': 'OTP has been resent to your email'}, status=200)
 
         with transaction.atomic():
             user = User.objects.create(
@@ -53,23 +45,15 @@ def signup(req):
                 password=make_password(password)
             )
 
-            verification_code = ''.join(secrets.choice('0123456789') for _ in range(6))
-
-            Profile.objects.create(
+            profile =Profile.objects.create(
                 user=user,
                 username=username,
                 dob=dob,
                 phone_number=phone_number,
-                verification_code=verification_code,
             )
-
-        send_mail(
-            subject="Email Verification Code",
-            message=f"Your verification code is {verification_code}. It expires in 5 minutes.",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email],
-            fail_silently=False,
-        )
+            verification  = generate_verification_code(profile=profile ,purpose='ACCOUNT_VERIFY')
+            if verification:
+                send_email(user,verification.code)
 
         return JsonResponse({'message': 'OTP has been sent to your email'}, status=200)
 

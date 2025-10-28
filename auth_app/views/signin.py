@@ -10,7 +10,7 @@ from rest_framework.permissions import AllowAny
 from django.core.mail import send_mail
 from django.conf import settings
 import secrets
-from auth_app.utils import send_verification_email
+# from auth_app.utils import send_verification_email
 @csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -37,8 +37,8 @@ def signin(req):
         # verification_code = ''.join(secrets.choice('0123456789') for _ in range(6))
         # user.profile.verification_code =verification_code
         # user.profile.save()
-        if user.profile.two_factor_auth:
-            send_verification_email(user)
+        # if user.profile.two_factor_auth:
+            # send_verification_email(user)
             
         return JsonResponse({
                     'message': 'Login successful',

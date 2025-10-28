@@ -9,7 +9,6 @@ class Profile(models.Model):
     username = models.CharField(max_length=20,null=False,default='default_username')
     created_at = models.DateTimeField(auto_now_add=True)
     isActive =models.BooleanField(default=False)
-    verification_code = models.CharField(max_length=6, default='')
     two_factor_auth = models.BooleanField(default=False)
     forget_password =models.BooleanField(default=False)
     is_Bloked = models.BooleanField(default=False)
