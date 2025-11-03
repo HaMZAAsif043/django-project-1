@@ -1,5 +1,5 @@
 from django.urls import path ,include
-from .views import signup,signin,Profile,verification,enable2FA,forgetPassword,verify_forget_password,reset_password,resend_verification
+from .views import signup,signin,ProfileView,verification,enable2FA,forgetPassword,verify_forget_password,reset_password,resend_verification,google_login,SettingsView
 
 urlpatterns = [
     path('signup/', signup),
@@ -10,5 +10,7 @@ urlpatterns = [
     path('resend_verification/', resend_verification),
     path('reset_password/', reset_password),
     path('verify_forget_password/', verify_forget_password),
-    path('profile/', Profile.as_view()),
+    path('google_auth/', google_login),
+    path('profile/', ProfileView.as_view()),
+    path('settings/', SettingsView.as_view()),
 ]

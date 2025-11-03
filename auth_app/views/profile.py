@@ -7,7 +7,7 @@ from auth_app.models import Profile
 from django.contrib.auth.hashers import make_password
 
 
-class Profile(APIView):
+class ProfileView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -22,7 +22,7 @@ class Profile(APIView):
                 'name': profile.username,
                 'phone': profile.phone_number,
                 'dob': profile.dob,
-                'profile_img': profile.profile_img.url if profile.profile_img else None,
+                'profile_img': profile.profile_img if profile.profile_img else None,
             }, status=status.HTTP_200_OK)
 
         except Profile.DoesNotExist:
