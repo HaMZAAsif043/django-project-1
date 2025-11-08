@@ -1,5 +1,5 @@
-from ..models import Settings
-from ..serializers import SettingsSerializer
+from auth_app.models import Settings
+from auth_app.serializers import SettingsSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication

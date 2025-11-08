@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.db import transaction
 from django.contrib.auth.password_validation import validate_password
-from ..utils import generate_verification_code ,send_email
+from auth_app.utils import generate_verification_code ,send_email
 
 @csrf_exempt
 def reset_password(req):

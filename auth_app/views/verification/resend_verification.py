@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 import json
 from auth_app.models import User, VerificationCode
-from ..utils import generate_verification_code, send_email
+from auth_app.utils import generate_verification_code, send_email
 
 
 @csrf_exempt

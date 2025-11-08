@@ -1,4 +1,4 @@
-from ..models import VerificationCode
+from auth_app.models import VerificationCode
 import random
 
 def generate_verification_code(profile, purpose):

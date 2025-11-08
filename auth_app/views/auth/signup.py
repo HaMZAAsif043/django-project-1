@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db import transaction
-from ..utils import generate_verification_code ,send_email
+from auth_app.utils import generate_verification_code ,send_email
 from django.utils import timezone
 @csrf_exempt
 def signup(req):
