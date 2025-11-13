@@ -1,0 +1,2 @@
+from .product_view import ProductView
+from .product_create import product_create_view ,product_details_view,product_List_view,product_alt_view
