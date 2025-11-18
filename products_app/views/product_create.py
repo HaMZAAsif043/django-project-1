@@ -1,10 +1,12 @@
 from rest_framework import generics
 from products_app.models import ProductModel
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny ,IsAuthenticated ,IsAuthenticatedOrReadOnly
 from rest_framework.decorators import api_view ,permission_classes
 from products_app.serializers import ProductSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.authentication import TokenAuthentication ,SessionAuthentication
+
 class ProductCreateAPIView(generics.CreateAPIView):
     queryset =ProductModel.objects.all()
     serializer_class =ProductSerializer
@@ -23,25 +25,49 @@ product_details_view = ProductDetailsAPIView.as_view()
 class ProductListAPIView(generics.ListCreateAPIView):
     queryset =ProductModel.objects.all()
     serializer_class =ProductSerializer
-    permission_classes =[AllowAny]
-
+    permission_classes =[IsAuthenticatedOrReadOnly]
+    authentication_classes =[SessionAuthentication]
 product_List_view = ProductListAPIView.as_view()
 
-@api_view(['GET','POST'])
-@permission_classes([AllowAny])
-def product_alt_view(request,pk=None,*args ,**kwargs,):
-    if request.method == 'GET':
-        if pk is not None:
-            obj = get_object_or_404(Product,pk=pk)
-            data =ProductSerializer(obj,many=False)
+class ProductUpdateAPIView(generics.UpdateAPIView):
+    queryset =ProductModel.objects.all()
+    serializer_class =ProductSerializer
+    lookup_field = 'pk'
+    permission_classes =[AllowAny]
+    def perform_update(self, serializer):
+        instance =serializer.save()
+        if not instance.description:
+            instance.description =instance.title
+product_update_view = ProductUpdateAPIView.as_view()
 
-            return Response(data)
-        queryset =ProductModel.objects.all()
-        data = ProductSerializer(queryset,many=True).data
-        return Response(data)
-    if request.method == 'POST':
-        data = request.data
-        serializer = ProductSerializer(data=data)
-        if serializer.is_valid(raise_exception=True):
-            print(serializer.data)
-            return Response(serializer.data)
+
+class ProductDestroyAPIView(generics.DestroyAPIView):
+    queryset =ProductModel.objects.all()
+    serializer_class =ProductSerializer
+    # lookup_field = 'pk'
+    permission_classes =[AllowAny]
+    def perform_destroy(self, instance):
+      
+        instance.delete()
+product_delete_view = ProductDestroyAPIView.as_view()
+
+
+
+# @api_view(['GET','POST'])
+# @permission_classes([AllowAny])
+# def product_alt_view(request,pk=None,*args ,**kwargs,):
+    # if request.method == 'GET':
+    #     if pk is not None:
+    #         obj = get_object_or_404(Product,pk=pk)
+    #         data =ProductSerializer(obj,many=False)
+
+    #         return Response(data)
+    #     queryset =ProductModel.objects.all()
+    #     data = ProductSerializer(queryset,many=True).data
+    #     return Response(data)
+    # if request.method == 'POST':
+    #     data = request.data
+    #     serializer = ProductSerializer(data=data)
+    #     if serializer.is_valid(raise_exception=True):
+    #         print(serializer.data)
+    #         return Response(serializer.data)
