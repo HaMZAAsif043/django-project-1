@@ -33,7 +33,14 @@ class ProductUpdateAPIView(generics.UpdateAPIView):
     queryset =ProductModel.objects.all()
     serializer_class =ProductSerializer
     lookup_field = 'pk'
+
     permission_classes =[AllowAny]
+
+
+
+
+
+    
     def perform_update(self, serializer):
         instance =serializer.save()
         if not instance.description:
